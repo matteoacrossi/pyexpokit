@@ -67,7 +67,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
                 err_loc = btol
 
                 F = expm(tsgn * tau * hm[:j+1, :j+1])
-                w *= 0.
+                w.fill(0)
                 for k in range(j + 1):
                     w += beta * vm[k] * F[k, 0]
                 mx = j
@@ -101,7 +101,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
             # time-step sufficient?
             err_loc += np.spacing(1)
             if err_loc <= delta * tau * (tau*tol/err_loc) ** r:
-                w *= 0.
+                w.fill(0)
                 for k in range(m+1):
                     w += beta * vm[k] * F[k, 0]
                 break
@@ -116,6 +116,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
         tk += tau
         tau = gamma * tau * (tau*tol/err_loc) ** r # estimate new time-step
         err_loc = max(err_loc, rndoff)
-        hm *= 0.
+        
+        hm.fill(0.)
 
     return w
