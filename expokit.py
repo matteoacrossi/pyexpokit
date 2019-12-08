@@ -1,11 +1,8 @@
 import numpy as np
-import scipy.sparse as sp
 from scipy.sparse.linalg import norm as spnorm
 
 from numpy.linalg import norm
-from scipy.linalg import expm 
-from timeit import default_timer as timer
-
+from scipy.linalg import expm
 
 def expmv(t, A, v, tol=1e-7, krylov_dim=30):
     n = A.shape[0]
@@ -55,17 +52,16 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
     while tk < tf:
         tau = min(tf - tk, tau)
         # Arnoldi procedure
-        # vm[1] = v/beta
         vm[0] = w / beta
         mx = m
 
         for j in range(m):
-            p = A @ vm[j]
-            
+            p = A.dot(vm[j])
+
             for i in range(j + 1):
                 hm[i, j] = np.vdot(vm[i], p)
                 p -= hm[i, j] * vm[i]
-            
+
             s = norm(p)
             if s < btol: # happy-breakdown
                 tau = tf - tk
@@ -102,7 +98,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
             else:
                 err_loc = err1
                 r = 1/(m-1)
-            
+
             # time-step sufficient?
             err_loc += np.spacing(1)
             if err_loc <= delta * tau * (tau*tol/err_loc) ** r:
@@ -115,7 +111,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
             tau = round(tau, ndigits=2) # round to 2 signiﬁcant digits
                                         # to prevent numerical noise
             it += 1
-        
+
         if it == maxiter:
             raise(RuntimeError("Number of iteration exceeded maxiter. Requested tolerance might be too high."))
 
