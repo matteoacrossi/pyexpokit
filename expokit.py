@@ -26,7 +26,6 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
     r = 1/m
     fact = (((m+1)/np.exp(1.0)) ** (m+1))*np.sqrt(2.0*np.pi*(m+1))
     tau = (1.0/anorm) * ((fact*tol)/(4.0*beta*anorm)) ** r
-    tau = round(tau, ndigits=2)
 
     outvec = np.zeros(v.shape, dtype=out_type)
     
@@ -108,8 +107,6 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
                 break
             
             tau = gamma * tau * (tau*tol/err_loc) ** r # estimate new time-step
-            tau = round(tau, ndigits=2) # round to 2 signiﬁcant digits
-                                        # to prevent numerical noise
             it += 1
 
         if it == maxiter:
@@ -118,8 +115,6 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
         beta = norm(w)
         tk += tau
         tau = gamma * tau * (tau*tol/err_loc) ** r # estimate new time-step
-        tau = round(tau, ndigits=2) # round to 2 signiﬁcant digits
-                             # to prevent numerical noise
         err_loc = max(err_loc, rndoff)
         hm *= 0.
 
