@@ -15,26 +15,17 @@ class TestExpmv(unittest.TestCase):
         A = sp.rand(n, n, .1) #+ 1j * sp.rand(n, n, .1)
         v = np.random.rand(n)
         t = -1.
-
-        start = timer()
-        result = expmv(t, A, v)
-        end = timer()
-        print("Expokit: {:.4f}".format(end - start))
-
-        start = timer()
-        scipy_result = expm_multiply(t*A, v)
-        end = timer()
-        print("expm_multiply: {:.4f}".format(end - start))
         
-        np.testing.assert_almost_equal(result, scipy_result)
-
+        self.compare_with_scipy(A, v, t)
 
     def test_complex(self):
-        n = 200
+        n = 500
         A = sp.rand(n, n, .1) + 1j * sp.rand(n, n, .1)
         v = np.random.rand(n) + 1j * np.random.rand(n)
         t = -1.j
+        self.compare_with_scipy(A, v, t)
 
+    def compare_with_scipy(self, A, v, t):
         start = timer()
         result = expmv(t, A, v)
         end = timer()
@@ -45,4 +36,4 @@ class TestExpmv(unittest.TestCase):
         end = timer()
         print("expm_multiply: {:.4f}".format(end - start))
         
-        np.testing.assert_almost_equal(result, scipy_result)
+        np.testing.assert_allclose(result, scipy_result)
