@@ -6,6 +6,6 @@ setup(
     url='https://github.com/matteoacrossi/pyexpokit.git',
     author='Matteo Rossi',
     description="Python implementation of Expokit's expv",
-    packages=find_packages(),    
+    packages=find_packages(),
     install_requires=['scipy'],
 )
