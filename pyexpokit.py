@@ -1,3 +1,7 @@
+"""
+A Python implementation of expm from Expokit
+"""
+
 import numpy as np
 from scipy.sparse.linalg import norm as spnorm
 
@@ -5,6 +9,26 @@ from numpy.linalg import norm
 from scipy.linalg import expm
 
 def expmv(t, A, v, tol=1e-7, krylov_dim=30):
+    """
+        Evaluates exp(t * A) @ v efficiently using Krylov subspace projection
+        techniques and matrix-vector product operations.
+
+    This function implements the expv function of the Expokit library
+    (https://www.maths.uq.edu.au/expokit). It is in particular suitable for 
+    large sparse matrices.
+
+    Args:
+    t (float): real or complex time-like parameter
+    A (array or sparse): an numpy.array or scipy.sparse square matrix
+    v (array): a vector with size compatible with A
+    tol (real): the required tolerance (default 1e-7)
+    krylov_dim (int): dimension of the Krylov subspace 
+                      (typically a number between 15 and 50, default 30)
+
+    Returns:
+    The array w(t) = exp(t * A) @ v.
+    """
+
     n = A.shape[0]
     m = min(krylov_dim, n)
 
@@ -80,6 +104,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
 
         if mx == m:
             avnorm = norm(A @ vm[m])
+
         # propagate using adaptive step size
         it = 1
         while it < maxiter and mx == m:
