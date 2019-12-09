@@ -37,3 +37,6 @@ class TestExpmv(unittest.TestCase):
         print("expm_multiply: {:.4f}".format(end - start))
         
         np.testing.assert_allclose(result, scipy_result)
+
+if __name__ == '__main__':
+    unittest.main()
