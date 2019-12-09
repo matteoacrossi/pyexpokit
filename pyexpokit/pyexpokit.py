@@ -83,9 +83,9 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
         for j in range(m):
             p = A.dot(vm[j])
 
-            for i in range(j + 1):
-                hm[i, j] = np.vdot(vm[i], p)
-                p -= hm[i, j] * vm[i]
+            hm[:j+1, j] = vm[:j+1, :].conj() @ p
+            tmp = hm[:j+1, j][:,np.newaxis] * vm[:j+1]
+            p -= np.sum(tmp, axis=0)
 
             s = norm(p)
             if s < btol: # happy-breakdown
