@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from expokit import expmv
+from pyexpokit import expmv
 import scipy.sparse as sp
 
 from scipy.sparse.linalg import expm_multiply
@@ -14,15 +14,15 @@ class TestExpmv(unittest.TestCase):
         n = 700
         A = sp.rand(n, n, .1) #+ 1j * sp.rand(n, n, .1)
         v = np.random.rand(n)
-        t = -1.
+        t = -10.
         
         self.compare_with_scipy(A, v, t)
 
     def test_complex(self):
-        n = 500
+        n = 700
         A = sp.rand(n, n, .1) + 1j * sp.rand(n, n, .1)
         v = np.random.rand(n) + 1j * np.random.rand(n)
-        t = -1.j
+        t = -10.j
         self.compare_with_scipy(A, v, t)
 
     def compare_with_scipy(self, A, v, t):
