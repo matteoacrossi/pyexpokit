@@ -28,14 +28,16 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
     Returns:
     The array w(t) = exp(t * A) @ v.
     """
+    assert A.shape[1] == A.shape[0], "A must be square"
+    assert A.shape[1] == v.shape[0], "v and A must have compatible shapes"
 
     n = A.shape[0]
     m = min(krylov_dim, n)
 
     anorm = spnorm(A, ord=np.inf)
-    
+
     out_type = np.result_type(type(t), A.dtype, v.dtype)
-    
+
     # safety factors
     gamma = 0.9
     delta = 1.2
@@ -52,7 +54,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
     tau = (1.0/anorm) * ((fact*tol)/(4.0*beta*anorm)) ** r
 
     outvec = np.zeros(v.shape, dtype=out_type)
-    
+
     # storage for Krylov subspace vectors
     vm = np.zeros((m + 1, len(v)), dtype=out_type)
     # for i in range(1, m + 2):
@@ -96,7 +98,7 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
                     w += beta * vm[k] * F[k, 0]
                 mx = j
                 break
-        
+
             hm[j+1, j] = s
             vm[j+1] = p / s
 
@@ -123,23 +125,24 @@ def expmv(t, A, v, tol=1e-7, krylov_dim=30):
                 err_loc = err1
                 r = 1/(m-1)
 
-            # time-step sufficient?
-            err_loc += np.spacing(1)
+            # is time step sufficient?
             if err_loc <= delta * tau * (tau*tol/err_loc) ** r:
                 w.fill(0)
                 for k in range(m+1):
                     w += beta * vm[k] * F[k, 0]
                 break
-            
-            tau = gamma * tau * (tau*tol/err_loc) ** r # estimate new time-step
+
+            # estimate new time-step
+            tau = gamma * tau * (tau * tol / err_loc) ** r 
             it += 1
 
         if it == maxiter:
-            raise(RuntimeError("Number of iteration exceeded maxiter. Requested tolerance might be too high."))
+            raise(RuntimeError("Number of iteration exceeded maxiter. "
+                               "Requested tolerance might be too high."))
 
         beta = norm(w)
         tk += tau
-        tau = gamma * tau * (tau*tol/err_loc) ** r # estimate new time-step
+        tau = gamma * tau * (tau * tol / err_loc) ** r # estimate new time-step
         err_loc = max(err_loc, rndoff)
         
         hm.fill(0.)
