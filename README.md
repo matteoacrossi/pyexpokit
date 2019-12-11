@@ -1,7 +1,7 @@
 # pyexpokit
-Python port of Expokit library by R. B. Sidje, based on the paper R. B. Sidje, ACM Trans. Math. Softw. 24, 130-156 (1998)
+Python port of Expokit library by R. B. Sidje, based on the paper [R. B. Sidje, ACM Trans. Math. Softw. 24, 130-156 (1998)](https://dx.doi.org/10.1145/285861.285868).
 
-Link to the original implementation of Expokit: https://www.maths.uq.edu.au/expokit/
+Link to the original implementation of Expokit: https://www.maths.uq.edu.au/expokit/.
 
 # Installation
 Install with pip
